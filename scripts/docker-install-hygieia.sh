@@ -58,12 +58,14 @@ cd hygieia-build-jenkins-collector
 mvn install
 cd ..
 
+#Before running below commands, set all environment variables in docker-compose.yml file.
+
 #Install Hygieia
 cd Hygieia
 sudo docker-compose up -d
 
 #Check All containers
-sudo docker ps
+sudo docker-compose ps
 
 #To bring down Hygieia setup
 #sudo docker-compose down
