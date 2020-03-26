@@ -1,7 +1,8 @@
-# Help: rename the adject docker-compose.override.example.yml file to docker-compose.override.yml
-#       then in the override file uncomment the environment tag for the collectors you want to
-#       run. Then add the environment vars you want to use.
-version: '3'
+# Before running docker-compose, set environment variables accordingly.
+# Don't modify the TEST_SCRIPT variable.
+# Check scripts/docker-install-hygieia.sh file for complete setup.
+
+version: "3"
 services:
   db:
     image: mongo:latest
@@ -14,6 +15,24 @@ services:
     build: db
     depends_on:
       - db
+
+  api:
+    image: hygieia-api
+    depends_on:
+      - db
+
+  hygieia-jenkins-build-collector:
+    build: ../hygieia-build-jenkins-collector
+    image: jenkins-build-collector
+    depends_on:
+      - db-setup
+    environment:
+      - JENKINS_CRON=0 * * * * *
+      - JENKINS_MASTER=http://ip172-18-0-67-bpue6frcktm000c0k6ug-8080.direct.labs.play-with-docker.com
+      - JENKINS_USERNAME=admin
+      - JENKINS_API_KEY=11d1a9b4efe7acc24dd17e714ba444a31d
+      - MONGO_PORT=tcp://18.208.182.146:27017
+      - TEST_SCRIPT=1
 
   ui:
     build: UI
